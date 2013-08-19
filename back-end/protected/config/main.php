@@ -27,10 +27,10 @@ return array(
             'caseSensitive' => true,
         ),
         'db' => array(
-            'connectionString' => 'mysql:host=localhost;dbname=mattskel_remodel',
+            'connectionString' => 'mysql:host=localhost;dbname=DBNameHere',
             'emulatePrepare' => true,
-            'username' => 'mattskel_mattske',
-            'password' => 'lLB0KE468qqi',
+            'username' => 'userNameHere',
+            'password' => 'passwordHere',
             'charset' => 'utf8',
             'tablePrefix' => 'ng_',
         ),
