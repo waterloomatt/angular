@@ -1,4 +1,4 @@
-angular
+Angular Family Manager
 =======
 A simple demo of an Angular app that connects to an external API.
 
