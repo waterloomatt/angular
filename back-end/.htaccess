@@ -1,0 +1,20 @@
+RewriteEngine on
+
+# if a directory or a file exists, use it directly
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# otherwise forward it to index.php
+RewriteRule . index-local.php
+
+FileETag none
+
+<ifmodule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/text text/html text/plain text/xml text/css application/x-javascript application/javascript text/javascript
+</ifmodule>
+
+
+<FilesMatch "\.(jpg|png|gif|js|css|ico|swf|eot|ttf|svg|woff)$">
+    Header set Cache-Control "public,max-age=604800"
+    Header set Vary "Accept-Encoding"
+</FilesMatch>
