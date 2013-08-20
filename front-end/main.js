@@ -12,8 +12,7 @@ var familyController = familyApp.controller('FamilyController', function($scope,
     Family.title = 'The Skeltons and Co.';
 
     $scope.family = Family;
-    //alert(JSON.stringify(people));
-    //$scope.family.members = people;
+
     $scope.family.members = $route.current.locals.people;
     $scope.query = '';
 
@@ -48,6 +47,7 @@ var profileController = familyApp.controller('ProfileController', function($scop
     $scope.person = $route.current.locals.person;
 
     $scope.save = function(person){
+        person.profile_picture = 'profile.jpg';
         person.put().then(function() {
             alert('Updated! Taking you back to The Family now.');
 
@@ -72,6 +72,12 @@ var profileController = familyApp.controller('ProfileController', function($scop
             function errorCallback(reason) {
                 alert("Error: No save for you! \n" + JSON.stringify(reason));
             });
+    }
+
+    $scope.serieImageUploaded = function (resp) {
+
+    // $scope.main.serie.image = data.serie.image;
+    //$scope.main.serie.banner_tile_image = data.serie.banner_tile_image;
     }
 });
 

@@ -8,6 +8,7 @@ return array(
         'application.models.*',
         'application.components.*',
         'ext.restfullyii.components.*',
+        'ext.yush.*',
     ),
     'modules' => array(
         'gii' => array(
@@ -17,6 +18,16 @@ return array(
         ),
     ),
     'components' => array(
+        'yush' => array(
+            'class' => 'ext.yush.YushComponent',
+            'baseDirectory' => 'uploads',
+            'lowercase' => true,
+            'template' => array(
+                'Person' => array(
+                    'original' => '{model}{modelId}',
+                )
+            ),
+        ),
         'user' => array(
             'allowAutoLogin' => true,
         ),

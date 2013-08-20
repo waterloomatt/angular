@@ -9,11 +9,12 @@
  * @property string $last_name
  * @property string $date_of_birth
  * @property string $profile_picture
+ * @property string $profile_picture_url
  * @property string $biography
  */
 class Person extends CActiveRecord
 {
-
+public $profile_picture_url;
     /**
      * Returns the static model of the specified AR class.
      * @param string $className active record class name.

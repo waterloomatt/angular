@@ -132,7 +132,7 @@ class ERestController extends Controller
         {
             Yii::app()->errorHandler->errorAction = '/' . $this->uniqueid . '/error';
 
-            if (!(isset($_SERVER['HTTP_X_' . self::APPLICATION_ID . '_USERNAME']) and isset($_SERVER['HTTP_X_' . self::APPLICATION_ID . '_PASSWORD'])))
+            /*if (!(isset($_SERVER['HTTP_X_' . self::APPLICATION_ID . '_USERNAME']) and isset($_SERVER['HTTP_X_' . self::APPLICATION_ID . '_PASSWORD'])))
             {
                 // Error: Unauthorized
                 throw new CHttpException(401, 'You are not authorized to preform this action.');
@@ -149,7 +149,7 @@ class ERestController extends Controller
             {
                 // Error: Unauthorized
                 throw new CHttpException(401, 'Error: User Password is invalid');
-            }
+            }*/
             // This tells the filter chain $c to keep processing.
             $c->run();
         }
@@ -252,6 +252,7 @@ class ERestController extends Controller
     {
         $this->doRestList();
     }
+    
 
     /**
      * Renders View of record as json

@@ -27,7 +27,7 @@ class PersonController extends ERestController
     {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'view'),
+                'actions' => array('index', 'view', 'upload'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -40,7 +40,60 @@ class PersonController extends ERestController
             ),
             array('deny', // deny all users
                 'users' => array('*'),
-            ),
+            )
+        );
+    }
+
+    public function actionUpload($id)
+    {
+        $person = Person::model()->findByPk($id);
+
+        $image = CUploadedFile::getInstanceByName('image');
+
+        if ($person && $image)
+        {
+            $profilePictureName = 'profile.jpg';
+
+            Yush::init($person);
+            $originalPath = Yush::getPath($person, Yush::SIZE_ORIGINAL, $profilePictureName);
+            if ($image->saveAs($originalPath))
+            {
+                $person->profile_picture = $profilePictureName;
+                $person->save();
+            }
+        }
+
+        $response = array();
+        $response['name'] = $model->first_name;
+        $response['path'] = $originalPath;
+        echo json_encode($response);
+    }
+
+    /**
+     * This is broken out as a separate method from actionRestView
+     * To allow for easy overriding in the controller
+     * adn to allow for easy unit testing
+     */
+    public function doRestView($id)
+    {
+        $model = $this->loadOneModel($id);
+
+        if (is_null($model))
+        {
+            $this->HTTPStatus = 404;
+            throw new CHttpException('404', 'Record Not Found');
+        }
+
+        $imagePath = Yush::getPath($model, Yush::SIZE_ORIGINAL, $model->profile_picture);
+        $imageUrl = Yush::getUrl($model, Yush::SIZE_ORIGINAL, $model->profile_picture);
+
+        if (file_exists($imagePath))
+            $model->profile_picture = $imageUrl;
+        else
+            $model->profile_picture = null;
+
+        $this->outputHelper(
+            'Record Retrieved Successfully', $model, 1
         );
     }
 

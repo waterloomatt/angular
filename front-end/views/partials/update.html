@@ -2,7 +2,7 @@
     <a href="#/family/" class="btn btn-default">Go back to the Family</a>
     <h2>Update</h2>
 
-    <form name="form" class="form-horizontal css-form" novalidate>
+    <form name="form"  class="form-horizontal css-form" novalidate>
         <div class="form-group">
             <label for="first_name" class="col-lg-2 control-label">First Name</label>
             <div class="col-lg-4">
@@ -28,16 +28,23 @@
         </div>
 
         <div class="form-group">
-            <label for="profile_picture" class="col-lg-2 control-label">Profile Picture</label>
+            <label for="biography" class="col-lg-2 control-label">Biography</label>
             <div class="col-lg-4">
-                <input type="text" class="form-control" id="profile_picture" placeholder="Profile Picture" ng-model="person.profile_picture"/>
+                <textarea class="form-control" rows="5" placeholder="Biography" ng-model="person.biography"></textarea>
             </div>
         </div>
 
         <div class="form-group">
-            <label for="biography" class="col-lg-2 control-label">Biography</label>
-            <div class="col-lg-4">
-                <textarea class="form-control" rows="5" placeholder="Biography" ng-model="person.biography"></textarea>
+            <label for="avatar" class="col-lg-2 control-label">Avatar</label>
+            <div
+                file-upload
+                action='back-end/person/upload/{{person.id}}'
+                btn-class='btn btn-small'
+                btn-label="Choose Image"
+                input-name="image"
+                on-success='serieImageUploaded(responseText)'
+                progress-class='btn btn-small'>
+
             </div>
         </div>
 
