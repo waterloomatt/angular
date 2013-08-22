@@ -1,13 +1,13 @@
 'use strict';
 
-familyApp.controller('FamilyAppController', function($rootScope){
+familyApp.controller('FamilyAppController', function($rootScope, $notification){
     $rootScope.$on('$routeChangeError', function(event, previous, current, rejection)
     {
-        console.log(rejection);
+        $notification.error('Route Change Error', rejection);
     });
 });
 
-var familyController = familyApp.controller('FamilyController', function($scope, $route){
+var familyController = familyApp.controller('FamilyController', function($scope, $route, $notification){
     var Family = {};
     Family.title = 'The Skeltons and Co.';
 
@@ -37,11 +37,13 @@ var familyController = familyApp.controller('FamilyController', function($scope,
 
         target.remove().then(function() {
             $scope.family.members = _.without($scope.family.members, target);
+
+            $notification.success('Deleted', target.first_name + ' ' + target.last_name + ' was successfully deleted.');
         });
     };
 });
 
-var profileController = familyApp.controller('ProfileController', function($scope, Restangular, $location, $route) {
+var profileController = familyApp.controller('ProfileController', function($scope, Restangular, $location, $route, $notification) {
     var newPerson = {};
     $scope.newPerson = newPerson;
     $scope.person = $route.current.locals.person;
@@ -49,13 +51,19 @@ var profileController = familyApp.controller('ProfileController', function($scop
     $scope.save = function(person){
         person.profile_picture = 'profile.jpg';
         person.put().then(function() {
-            alert('Updated! Taking you back to The Family now.');
-
+            $notification.success('Updated', person.first_name + ' ' + person.last_name + ' was successfully updated.');
             $location.path('/#/family');
             $location.replace();
+
         },
         function errorCallback(reason) {
-            alert("Error: No save for you! \n" + JSON.stringify(reason));
+
+            var errors = "";
+            angular.forEach(reason.data.message.validation, function(value, key){
+                alert(value);
+                errors += value+"\n";
+            });
+            $notification.error('Failed', errors);
         });
     }
 
@@ -64,13 +72,18 @@ var profileController = familyApp.controller('ProfileController', function($scop
 
         basePeople.post(newbie).then(
             function() {
-                alert('Created! Taking you back to The Family now.');
+                $notification.success('Created', newbie.first_name + ' ' + newbie.last_name + ' was successfully created.');
 
                 $location.path('/#/family');
                 $location.replace();
             },
             function errorCallback(reason) {
-                alert("Error: No save for you! \n" + JSON.stringify(reason));
+                var errors = "";
+                angular.forEach(reason.data.message.validation, function(value, key){
+                    alert(value);
+                    errors += value+"\n";
+                });
+                $notification.error('Failed', errors);
             });
     }
 

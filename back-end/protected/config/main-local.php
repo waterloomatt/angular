@@ -21,7 +21,7 @@ return CMap::mergeArray(
                 'connectionString' => 'mysql:host=127.0.0.1;dbname=angular',
                 'emulatePrepare' => true,
                 'username' => 'root',
-                'password' => 'passwordHere',
+                'password' => 'gh429mnx',
                 'charset' => 'utf8',
                 'tablePrefix' => 'ng_',
                 //'enableProfiling' => true,

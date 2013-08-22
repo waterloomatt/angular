@@ -1,6 +1,6 @@
 'use strict';
 
-var familyApp = angular.module('FamilyApp', ['restangular']).
+var familyApp = angular.module('FamilyApp', ['restangular', 'notifications']).
 config(['$httpProvider','$routeProvider', 'RestangularProvider', function($httpProvider, $routeProvider, RestangularProvider) {
     // Provide some credentials with every request
     $httpProvider.defaults.headers.common['X_REST_USERNAME'] = 'admin@restuser';
@@ -86,22 +86,9 @@ familyApp.directive('datepicker', function() {
     };
 });
 
-familyApp.directive('error', function($rootScope){
+familyApp.directive('fileUpload', ['$notification', function($notification) {
     return {
-        restrict: 'E',
-        template: '<div class="alert alert-danger" ng-show="isError">{{error}}</div>',
-        link: function(scope){
-            $rootScope.$on('$routeChangeError', function(event, previous, current, rejection)
-            {
-                scope.isError = true;
-                scope.error = rejection;
-            })
-        }
-    }
-});
-
-familyApp.directive('fileUpload', [function() {
-    return {
+        require: '^?form',
         restrict: 'EA',
         replace: false,
         scope: {
@@ -117,6 +104,7 @@ familyApp.directive('fileUpload', [function() {
             attrs.inputName = attrs.inputName || "file";
             attrs.btnClass = attrs.btnClass || "btn";
             attrs.progressClass = attrs.progressClass || "btn";
+            scope.formController = ctrl;
 
             elem.find('.fake-uploader').click(function() {
                 elem.find('input[type="file"]').click();
@@ -127,29 +115,31 @@ familyApp.directive('fileUpload', [function() {
 			enctype='multipart/form-data'> \
 			<div class='uploader'> \
 				<input \
-					type='file' \
-					name='{{ inputName }}' \
-					style='display: none;' \
-					onchange='angular.element(this).scope().sendFile(this);'/> \
-				<div class='btn-group'> \
-					<button \
-						class='{{ btnClass }} fake-uploader' \
-						type='button' \
-						readonly='readonly' \
-						ng-model='avatar'>{{ btnLabel }}</button> \
-					<button \
-						disabled \
-						class='{{ progressClass }}' \
-						ng-class='{ \"btn-primary\": progress < 100, \"btn-success\": progress == 100 }' \
-						ui-if=\"progress > 0\">{{ progress }}%</button>\
-				</div> \
-			</div> \
-		</form>",
+                                    type='file' \
+                                    name='{{ inputName }}' \
+                                    style='display: none;' \
+                                    onchange='angular.element(this).scope().sendFile(this);'/> \
+                                    <div class='btn-group'> \
+                                        <button \
+                                            class='{{ btnClass }} fake-uploader' \
+                                            type='button' \
+                                            readonly='readonly' \
+                                            ng-model='avatar'>{{ btnLabel }}</button> \
+                                        <button \
+                                            disabled \
+                                            class='{{ progressClass }}' \
+                                            ng-class='{ \"btn-primary\": progress < 100, \"btn-success\": progress == 100 }' \
+                                            ui-if=\"progress > 0\">{{ progress }}%</button>\
+                                    </div>\
+                            </div> \
+                    </form>",
         controller: ['$scope', function ($scope) {
             $scope.progress = 0;
             $scope.avatar = '';
 
             $scope.sendFile = function(el) {
+
+
                 var $form = $(el).parents('form');
 
                 if ($(el).val() == '') {
@@ -164,6 +154,11 @@ familyApp.directive('fileUpload', [function() {
 
                 $form.ajaxSubmit({
                     type: 'POST',
+                    beforeSubmit: function(arr, $form, options) {
+                        $scope.formController.$invalid = true;
+                        $notification.success('Uploading...', 'Please wait.');
+
+                    },
                     uploadProgress: function(event, position, total, percentComplete) {
 
                         $scope.$apply(function() {
@@ -183,6 +178,8 @@ familyApp.directive('fileUpload', [function() {
                                 statusText: statusText,
                                 form: form,
                             });
+                            $notification.deleteNotification($notification);
+                            $scope.formController.$invalid = false;
                         });
                     },
                     success: function(responseText, statusText, xhr, form) {
@@ -199,9 +196,10 @@ familyApp.directive('fileUpload', [function() {
                                 xhr: xhr,
                                 form: form
                             });
+                            $notification.deleteNotification($notification);
+                            $scope.formController.$invalid = false;
+                            $scope.progress = 0;
                         });
-
-                        $scope.progress = 0;
                     }
                 });
             }

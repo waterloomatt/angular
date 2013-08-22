@@ -2,7 +2,7 @@
     <a href="#/family/" class="btn btn-default">Go back to the Family</a>
     <h2>Update</h2>
 
-    <form name="form"  class="form-horizontal css-form" novalidate>
+    <form name="form" mg-model class="form-horizontal css-form" novalidate>
         <div class="form-group">
             <label for="first_name" class="col-lg-2 control-label">First Name</label>
             <div class="col-lg-4">
@@ -36,21 +36,23 @@
 
         <div class="form-group">
             <label for="avatar" class="col-lg-2 control-label">Avatar</label>
-            <div
-                file-upload
-                action='back-end/person/upload/{{person.id}}'
-                btn-class='btn btn-small'
-                btn-label="Choose Image"
-                input-name="image"
-                on-success='serieImageUploaded(responseText)'
-                progress-class='btn btn-small'>
-
+            <div class="col-lg-4">
+                <div
+                    file-upload
+                    action='back-end/person/upload/{{person.id}}'
+                    btn-class='btn btn-large'
+                    btn-label="Choose Image"
+                    input-name="image"
+                    on-success='serieImageUploaded(responseText)'
+                    progress-class='btn btn-small'>
+                </div>
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-lg-offset-2 col-lg-10">
-                <button type="submit" class="btn btn-default"
+                <button type="submit"
+                        class="btn btn-default"
                         ng-click="save(person)"
                         ng-disabled="form.$invalid"
                         >Update</button>
