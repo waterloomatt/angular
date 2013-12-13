@@ -14,7 +14,8 @@
  */
 class Person extends CActiveRecord
 {
-public $profile_picture_url;
+    public $profile_picture_url;
+
     /**
      * Returns the static model of the specified AR class.
      * @param string $className active record class name.
@@ -42,7 +43,8 @@ public $profile_picture_url;
         // will receive user inputs.
         return array(
             array('first_name, last_name, date_of_birth', 'required'),
-            array('first_name, last_name, profile_picture', 'length', 'max' => 50),
+            array('first_name, last_name', 'length', 'max' => 50),
+            array('profile_picture', 'length', 'max' => 255),
             // The following rule is used by search().
             // Please remove those attributes that should not be searched.
             array('id, first_name, last_name, date_of_birth, profile_picture', 'safe', 'on' => 'search'),

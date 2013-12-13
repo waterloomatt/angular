@@ -48,8 +48,10 @@ var profileController = familyApp.controller('ProfileController', function($scop
     $scope.newPerson = newPerson;
     $scope.person = $route.current.locals.person;
 
+    if ($route.current.locals.person)
+        $scope.profile_picture_url = $route.current.locals.person.profile_picture;
+
     $scope.save = function(person){
-        person.profile_picture = 'profile.jpg';
         person.put().then(function() {
             $notification.success('Updated', person.first_name + ' ' + person.last_name + ' was successfully updated.');
             $location.path('/#/family');
@@ -65,6 +67,13 @@ var profileController = familyApp.controller('ProfileController', function($scop
             });
             $notification.error('Failed', errors);
         });
+    }
+
+    $scope.uploadComplete = function(responseText, notification)
+    {
+        alert('x');
+        $scope.profile_picture_url = responseText.url;
+        notification.deleteNotification(notification);
     }
 
     $scope.create = function(newbie){
@@ -86,12 +95,6 @@ var profileController = familyApp.controller('ProfileController', function($scop
                 $notification.error('Failed', errors);
             });
     }
-
-    $scope.serieImageUploaded = function (resp) {
-
-    // $scope.main.serie.image = data.serie.image;
-    //$scope.main.serie.banner_tile_image = data.serie.banner_tile_image;
-    }
 });
 
 familyController.loadData = function($q, Restangular)
@@ -112,7 +115,6 @@ familyController.loadData = function($q, Restangular)
 }
 
 profileController.loadPerson = function($q, Restangular, $route){
-
     var defer = $q.defer();
 
     var person = Restangular.one('person', $route.current.params.personId);

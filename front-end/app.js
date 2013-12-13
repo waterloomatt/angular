@@ -8,8 +8,9 @@ config(['$httpProvider','$routeProvider', 'RestangularProvider', function($httpP
 
     // Let's setup the RestAngular library to handle our REST calls
     RestangularProvider.setBaseUrl("back-end/api");
-    RestangularProvider.setResponseExtractor(function (data, response, operation) {
-        return data.data[operation];
+    RestangularProvider.setResponseExtractor(function (data, operation, what, url, response, deferred) {
+        //alert(JSON.stringify(deferred));
+        return data.data[what];
     });
 
     // Routing config
@@ -77,6 +78,7 @@ familyApp.directive('datepicker', function() {
                 changeMonth: true,
                 changeYear: true,
                 dateFormat: 'yy-mm-dd',
+                yearRange: "-100:+0",
                 onSelect: function(dateText) {
                     var expression = attr.ngModel + " = " + "'" + dateText + "'";
                     scope.$apply(expression);
@@ -84,6 +86,22 @@ familyApp.directive('datepicker', function() {
             });
         }
     };
+});
+
+familyApp.directive('ngConfirmClick', function(){
+    return {
+        priority: 100,
+        restrict: 'A',
+        link: function(scope, element, attrs){
+            element.bind('click', function(e){
+                var message = attrs.ngConfirmClick;
+                if(message && !confirm(message)){
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                }
+            });
+        }
+    }
 });
 
 familyApp.directive('fileUpload', ['$notification', function($notification) {
@@ -177,8 +195,9 @@ familyApp.directive('fileUpload', ['$notification', function($notification) {
                                 responseText: responseText,
                                 statusText: statusText,
                                 form: form,
+                                notification: $notification
                             });
-                            $notification.deleteNotification($notification);
+
                             $scope.formController.$invalid = false;
                         });
                     },
@@ -194,9 +213,10 @@ familyApp.directive('fileUpload', ['$notification', function($notification) {
                                 responseText: responseText,
                                 statusText: statusText,
                                 xhr: xhr,
-                                form: form
+                                form: form,
+                                notification: $notification
                             });
-                            $notification.deleteNotification($notification);
+
                             $scope.formController.$invalid = false;
                             $scope.progress = 0;
                         });
@@ -225,5 +245,12 @@ familyApp.filter('capitalize', function(){
 familyApp.filter('condense', function(){
     return function (text){
         return text.replace(/\s+/g, '-').toLowerCase();
+    }
+});
+
+familyApp.filter('age', function(){
+    return function (text){
+        var birthday = +new Date(text);
+        return ~~((Date.now() - birthday) / (31557600000));
     }
 });

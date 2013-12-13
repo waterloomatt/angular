@@ -5,31 +5,35 @@
 
             <br />
 
-            <a href="#/family/create" class="btn btn-default">Create New Person</a>
+            <a href="#/family/create" class="btn btn-info">
+                <span class="glyphicon glyphicon-pencil"></span> Create New Person</a>
         </div>
         <div class="col-xs-12 col-sm-9 col-md-9">
-            <table class="table table-striped table-bordered">
+            <table class="table table-striped table-bordered table-condensed table-hover">
                 <tr>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Name Reversed</th>
-                    <th>Date of Birth</th>
+                    <th>Age</th>
                     <th>Actions</th>
                 </tr>
                 <tr ng-repeat="person in family.members | filter:search | orderBy:['first_name', 'last_name']">
                     <td>{{person.first_name}}</td>
                     <td>{{person.last_name}}</td>
                     <td>{{person.first_name + ' ' + person.last_name | reverse | capitalize}}</td>
-                    <td>{{person.date_of_birth}}</td>
+                    <td>{{person.date_of_birth | age}}</td>
                     <td>
                         <div class="btn-group">
-                            <a href="#/family/{{person.id}}" class="btn btn-default">View Profile</a>
+                            <a href="#/family/{{person.id}}" class="btn btn-default">
+                                View Profile</a>
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a href="#/family/update/{{person.id}}">Update</a></li>
-                                <li><a href="#/family" ng-click="deletePerson(person.id)">Delete</a></li>
+                                <li><a href="#/family/update/{{person.id}}">
+                                        <span class="glyphicon glyphicon-edit"></span> Update</a></li>
+                                <li><a href="#/family" ng-confirm-click="Are you sure you want to delete {{person.first_name}} {{person.last_name}}?" ng-click="deletePerson(person.id)">
+                                        <span class="glyphicon glyphicon-trash"></span> Delete</a></li>
                             </ul>
                         </div>
                     </td>

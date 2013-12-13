@@ -257,8 +257,6 @@ angular.module('notifications', []).
         $scope.removeNotification = function(noti){
           $scope.queue.splice($scope.queue.indexOf(noti), 1);
         };
-      }
-    ]
-
+      }]
     };
   }]);

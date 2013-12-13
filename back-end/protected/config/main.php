@@ -25,8 +25,16 @@ return array(
             'template' => array(
                 'Person' => array(
                     'original' => '{model}{modelId}',
+                    'large' => '{model}{modelId}',
+                    'thumb' => '{model}{modelId}',
                 )
             ),
+        ),
+        'phpThumb' => array(
+            'class' => 'ext.EPhpThumb.EPhpThumb',
+            'options' => array(
+            //optional phpThumb specific options are added here
+            )
         ),
         'user' => array(
             'allowAutoLogin' => true,
@@ -38,10 +46,10 @@ return array(
             'caseSensitive' => true,
         ),
         'db' => array(
-            'connectionString' => 'mysql:host=localhost;dbname=DBNameHere',
+            'connectionString' => 'mysql:host=localhost;dbname=mattskel_remodel',
             'emulatePrepare' => true,
-            'username' => 'userNameHere',
-            'password' => 'passwordHere',
+            'username' => 'mattskel_mattske',
+            'password' => 'lLB0KE468qqi',
             'charset' => 'utf8',
             'tablePrefix' => 'ng_',
         ),

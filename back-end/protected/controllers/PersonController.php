@@ -46,26 +46,41 @@ class PersonController extends ERestController
 
     public function actionUpload($id)
     {
+        header('Content-type: application/json');
         $person = Person::model()->findByPk($id);
 
         $image = CUploadedFile::getInstanceByName('image');
 
+        $imageName = 'profile_picture.jpg';
+
         if ($person && $image)
         {
-            $profilePictureName = 'profile.jpg';
 
             Yush::init($person);
-            $originalPath = Yush::getPath($person, Yush::SIZE_ORIGINAL, $profilePictureName);
+
+            $originalPath = Yush::getPath($person, Yush::SIZE_ORIGINAL, $imageName);
+            $largePath = Yush::getPath($person, Yush::SIZE_LARGE, $imageName);
+            $thumbPath = Yush::getPath($person, Yush::SIZE_THUMB, $imageName);
+
             if ($image->saveAs($originalPath))
             {
-                $person->profile_picture = $profilePictureName;
+                $largeImage = Yii::app()->phpThumb->create($originalPath);
+                $largeImage->resize(800, 600);
+                $largeImage->save($largePath);
+
+                $thumb = Yii::app()->phpThumb->create($originalPath);
+                $thumb->resize(300, 225);
+                $thumb->save($thumbPath);
+
+                $person->profile_picture = Yush::getUrl($person, Yush::SIZE_LARGE, $imageName);
                 $person->save();
             }
         }
 
+        $person->refresh();
+
         $response = array();
-        $response['name'] = $model->first_name;
-        $response['path'] = $originalPath;
+        $response['url'] = Yush::getUrl($person, Yush::SIZE_THUMB, $imageName) . '?' . time();
         echo json_encode($response);
     }
 
@@ -84,11 +99,11 @@ class PersonController extends ERestController
             throw new CHttpException('404', 'Record Not Found');
         }
 
-        $imagePath = Yush::getPath($model, Yush::SIZE_ORIGINAL, $model->profile_picture);
-        $imageUrl = Yush::getUrl($model, Yush::SIZE_ORIGINAL, $model->profile_picture);
+        $imagePath = Yush::getPath($model, Yush::SIZE_LARGE, 'profile_picture.jpg');
+        $imageUrl = Yush::getUrl($model, Yush::SIZE_LARGE, 'profile_picture.jpg');
 
         if (file_exists($imagePath))
-            $model->profile_picture = $imageUrl;
+            $model->profile_picture = $imageUrl . '?' . time();
         else
             $model->profile_picture = null;
 
