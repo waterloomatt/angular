@@ -11,5 +11,3 @@ Back-End
 ========
   1. PHP Rest API (Yii Framework + RestFullyYii extension)
   2. MySql
-
-Demo: http://mattskelton.ca/angular
